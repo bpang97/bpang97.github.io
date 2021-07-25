@@ -1,0 +1,190 @@
+
+
+<html>
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <!-- <style> circle {fill: lightblue; stroke: black; }</style> -->
+    <body>
+    
+        <style>
+            body {
+                font: 19px sans-serif;
+            }
+    
+            .tooltip {
+                position: absolute;
+                font-size: 12px;
+                width:  auto;
+                height: auto;
+                pointer-events: none;
+                background-color: rgb(228, 151, 151);
+            }
+             </style>
+
+
+
+        <div class="header">
+            <h1>Visualizing Mileage as a Function of Cylinders</h1>
+            <p> Using the same data on cars in 2017, this time we take the average the city and highway mileages for each cylinder count, across all cars with a specific number of cylinders.
+                The line graph below shows the relationship between the number of cylinders on the x-axis against the mpg on the y-axis. Note that 0 cylinders is actually a legitimate measurement, as electric cars 
+                are considered to have no cylinders! Also, the mileage for electric vehicles is expressed as "miles per gallon gasoline equivalent", MPGe. You can 
+                read more about how this is calculated <a href="https://en.wikipedia.org/wiki/Miles_per_gallon_gasoline_equivalent">here</a>.
+                </p>
+
+            <p> Finally, the combined mileage is calculated as <a href="https://www.epa.gov/fueleconomy/text-version-gasoline-label">defined by the EPA</a>: as a weighted average of 45% highway and 55% city.
+                </p>
+                
+          </div>
+          
+    
+    <svg width=600 height=600>
+    </svg>
+    <script>
+    
+
+
+    
+    var margin = 50;
+    var width = 500;
+    var height = 500;
+
+        
+    var x = d3.scaleLinear()
+        .range([0,500]);
+        
+    var y = d3.scaleLinear()
+        .range([500,0]);
+    
+var cityMPGLine = d3.line()
+    .x(function(d) { return x(d.EngineCylinders); })
+    .y(function(d) { return y(d.CityMPG); });
+
+    var highwayMPGLine = d3.line()
+    .x(function(d) { return x(d.EngineCylinders); })
+    .y(function(d) { return y(d.HighwayMPG); });
+
+    var combinedMPGLine = d3.line()
+    .x(function(d) { return x(d.EngineCylinders); })
+    .y(function(d) { return y(d.AvgCombinedMPG); });
+    
+
+    d3.select("svg").
+        attr("width",width + 4*margin)
+        .attr("height",height + 4*margin)
+        .append("g")
+            .attr("transform","translate(" + margin + "," + margin + ")");
+ 
+
+d3.csv("cyl_mpg.csv", function(d) {
+
+    // if (error) throw error;
+
+    // format the data
+
+        d.CityMPG = parseFloat(d.CityMPG);
+        d.HighwayMPG = parseFloat(d.HighwayMPG);
+        d.AvgCombinedMPG = parseFloat(d.AvgCombinedMPG);
+        d.EngineCylinders = parseFloat(d.EngineCylinders);
+        return d
+    
+    
+   }    ).then( function (data) {
+
+   
+       
+   
+         // Scale the range of the data
+  x.domain(d3.extent(data, function(d) { return d.EngineCylinders; }));
+  y.domain([0, 150]);
+
+
+    
+    d3.select("svg").append("path")
+    .attr("transform","translate(" + margin + "," + margin + ")")
+        .data([data])
+        .attr("class", "line")
+        .style("stroke", "red")
+        .style("fill", "none")
+        .style("stroke-width", "2px")
+        .attr("d", cityMPGLine);
+    
+    
+        d3.select("svg").append("path")            
+        .attr("transform","translate(" + margin + "," + margin + ")")
+        .data([data])
+        .attr("class", "line")
+        .style("fill", "none")
+        .style("stroke", "green")
+        .style("stroke-width", "2px")
+        .attr("d", highwayMPGLine);
+
+        d3.select("svg").append("path")
+        .attr("transform","translate(" + margin + "," + margin + ")")
+        .data([data])
+        .attr("class", "line")
+        .style("fill", "none")
+        .style("stroke", "black")
+        .style("stroke-width", "2px")
+        .attr("d", combinedMPGLine);
+
+
+
+
+        d3.select("svg").append("g")
+        .attr("transform", "translate(" + margin + "," + (height+margin) + ")")
+        .call(d3.axisBottom(x)
+            .tickValues([0, 2, 4, 6, 8, 10, 12])
+            .tickFormat(d3.format("~s")));
+            
+   
+
+    d3.select("svg").append("g")
+        .attr("transform", "translate(" + margin + "," + margin + ")")
+        .call(d3.axisLeft(y)
+            .tickFormat(d3.format("~s")));
+    
+    d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width - margin * 3)
+    .attr("y", height + 2 * margin - 6)
+    .text("Engine Cylinders");
+
+
+    d3.select("svg").append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("x", -4 * margin)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("Miles Per Gallon");
+
+
+    // legend
+    d3.select("svg").append("circle").attr("cx",400).attr("cy",130).attr("r", 6).style("fill", "green")
+    d3.select("svg").append("circle").attr("cx",400).attr("cy",160).attr("r", 6).style("fill", "black")
+    d3.select("svg").append("circle").attr("cx",400).attr("cy",190).attr("r", 6).style("fill", "red")
+
+    d3.select("svg").append("text").attr("x", 420).attr("y", 130).text("Highway").style("font-size", "15px").attr("alignment-baseline","middle")
+    d3.select("svg").append("text").attr("x", 420).attr("y", 160).text("Combined").style("font-size", "15px").attr("alignment-baseline","middle")
+    d3.select("svg").append("text").attr("x", 420).attr("y", 190).text("City").style("font-size", "15px").attr("alignment-baseline","middle")
+
+   
+   result =>  console.log('Fulfilled')
+   })
+ .catch( error =>  console.log(error) );
+    
+    
+    </script>
+
+
+<p> We can clearly see an inverse relationship between the number of cylinders and the mileage; the more cylinders, the lower the mpg. This is 
+    expected since cars with more cylinders are considered more powerful (having better acceleration), which comes at the cost of fuel efficiency. Furthermore, 
+    we can see an interesting trend: for 0-cylinder cars, the city mileage is better than highway mileage! This is because 0-cylinder cars are electric cars, which 
+    indeed have <a href="    https://www.caranddriver.com/shopping-advice/a32603216/ev-range-explained/#:~:text=Unlike%20gas%2Dpowered%20vehicles%2C%20whose,city%20range%20ratings%20than%20highway.&text=Even%20the%20shortest%2Drange%20EV,of%2C%20say%2C%2015%20mph.">better fuel efficiency in the city than on the highway</a>.  </p>
+
+
+
+    </body>
+    </html>
+

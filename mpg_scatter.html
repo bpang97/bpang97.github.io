@@ -1,0 +1,131 @@
+
+
+<html>
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <style> circle {fill: lightblue; stroke: black; }</style>
+    <body onload='init()'>
+    
+        <style>
+            body {
+                font: 15px sans-serif;
+            }
+    
+            .tooltip {
+                position: absolute;
+                font-size: 12px;
+                width:  auto;
+                height: auto;
+                pointer-events: none;
+                background-color: rgb(228, 151, 151);
+            }
+             </style>
+
+
+
+        <div class="header">
+            <h1>Visualizing Mileage on the Highway and in the City</h1>
+            <p>The scatterplot below plots average city mpg on the x-axis against average highway mpg on the y-axis. Note that it uses
+                a log scale. </p>
+          </div>
+          
+    
+    <svg width=600 height=600>
+    </svg>
+    <script>
+    
+
+    async function init() {
+    
+    var margin = 50;
+    var width = 500;
+    var height = 500;
+    
+    data = await d3.csv("cars2017.csv");
+    
+    
+    var x = d3.scaleLog()
+        .domain([10,150])
+        .range([0,500]);
+        
+    var y = d3.scaleLog()
+        .domain([10,150])
+        .range([500,0]);
+    
+    var tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+    
+    
+    // tooltip mouseover event handler
+    var tipMouseover = function(d) {
+        var html  = d.Make + " " + d.EngineCylinders + " cylinder <br/>" +
+                    "Avg City MPG: " + d.AverageCityMPG + "<br/> Avg Highway MPG: " + d.AverageHighwayMPG;
+    
+        tooltip.html(html)
+            .style("left", (d3.event.pageX + 15) + "px")
+            .style("top", (d3.event.pageY - 28) + "px")
+        .transition()
+            .duration(200) // ms
+            .style("opacity", 1) // started as 0!
+    
+    };
+    // tooltip mouseout event handler
+    var tipMouseout = function(d) {
+        tooltip.transition()
+            .duration(300) // ms
+            .style("opacity", 0); // don't care about position!
+    };
+    
+    d3.select("svg").
+        attr("width",width + 2*margin)
+        .attr("height",height + 2*margin)
+        .append("g")
+            .attr("transform","translate(" + margin + "," + margin + ")")
+        .selectAll("dot")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d) { return x(d.AverageCityMPG)})
+        .attr("cy", function(d) { return y(d.AverageHighwayMPG)})
+        .attr("r", function(d,i) { return 2 + parseInt(d.EngineCylinders); })
+        .on("mouseover", tipMouseover)
+        .on("mouseout", tipMouseout);
+    
+    
+    d3.select("svg").append("g")
+        .attr("transform", "translate(" + margin + "," + margin + ")")
+        .attr("fill", "none")
+        .attr("font-size", "10")
+        .attr("font-family", "sans-serif")
+        .attr("text-anchor", "end")
+        .call(d3.axisLeft(y)
+            .tickValues([10, 20, 50, 100])
+            .tickFormat(d3.format("~s")));
+    
+    d3.select("svg").append("g")
+        .attr("transform", "translate(" + margin + "," + (height+margin) + ")")
+        .attr("fill", "none")
+        .attr("font-size", "10")
+        .attr("font-family", "sans-serif")
+        .attr("text-anchor", "end")
+        .call(d3.axisBottom(x)
+            .tickValues([10, 20, 50, 100])
+            .tickFormat(d3.format("~s")));
+            
+        
+    
+    
+    
+    
+    
+    
+    
+        }
+    
+    
+    
+    
+    
+    </script>
+    </body>
+    </html>

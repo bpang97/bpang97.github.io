@@ -1,71 +1,56 @@
-<!DOCTYPE html>
+
 
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
-<style> rect {fill: rgb(233, 15, 69); stroke: black; }</style>
+<style> circle {fill: lightblue; stroke: black; }</style>
+<body onload='init()'>
+
+<style>
+    body {
+        font: 15px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .dot {
+        stroke: none;
+    }
+    .tooltip {
+        position: absolute;
+        font-size: 12px;
+        width:  auto;
+        height: auto;
+        pointer-events: none;
+        background-color: white;
+    }
+</style>
+
+
 <body>
-<svg width=300 height=300>
-</svg>
-<script>
-var data = [4,8,15,16,23,42];
+    <div class="jumbotron" style="background-color: rgb(36, 2, 2); color: white" aligncenter>
+        <br>
+        <h1 style="padding-left : 2%">An Inquiry into the Mileage of Various Cars</h1>
+        <br><br>
+      </div>
+ 
+
+      <br/><h3>Begin the <a href="mpg_line.html">Journey</a></h3><br/></div>
 
 
 
 
-var margin = 50;
-var width = 200;
-var height = 200;
-
-
-var x = d3.scaleBand()
-    .domain([0,1,2,3,4,5])
-    .range([0,200]);
-    
-var y = d3.scaleLinear()
-    .domain([0,42])
-    .range([200,0]);
-
-
-d3.select("svg").
-    attr("width",width + 2*margin)
-    .attr("height",height + 2*margin)
-    .append("g")
-        .attr("transform","translate(" + margin + "," + margin + ")")
-    .selectAll("rect")
-    .data(data)
-    .enter().append("rect")
-    .attr("width",200/6)
-    .attr("height",function(d) { return height - y(d); })
-    .attr("x",function(d,i) { return x(i); })
-    .attr("y",function(d) { return y(d); });
-
-
-d3.select("svg").append("g")
-    .attr("transform", "translate(" + margin + "," + margin + ")")
-    .attr("fill", "none")
-    .attr("font-size", "10")
-    .attr("font-family", "sans-serif")
-    .attr("text-anchor", "end")
-    .call(d3.axisLeft(y));
-
-d3.select("svg").append("g")
-    .attr("transform", "translate(" + margin + "," + (height+margin) + ")")
-    .attr("fill", "none")
-    .attr("font-size", "10")
-    .attr("font-family", "sans-serif")
-    .attr("text-anchor", "end")
-    .call(d3.axisBottom(x));
-    
+      <img src="maserati.jpeg"
+      width="600"
+      height="341">
 
 
 
 
 
 
-
-
-
-
-</script>
-</body>
-</html>
+    </body>

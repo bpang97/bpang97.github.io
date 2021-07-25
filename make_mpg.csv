@@ -1,0 +1,59 @@
+"","Make","Fuel","HighwayMPG","CityMPG","AvgCombinedMPG"
+"1","Hyundai","Electricity",122,150,137.4
+"2","Chevrolet","Electricity",110,128,119.9
+"3","BMW","Electricity",109,133,122.2
+"4","Fiat","Electricity",103,121,112.9
+"5","Mitsubishi","Electricity",102,121,112.45
+"6","Nissan","Electricity",101,124,113.65
+"7","Tesla","Electricity",98,92,94.7
+"8","Ford","Electricity",96,118,108.1
+"9","Kia","Electricity",92,120,107.4
+"10","Mercedes-Benz","Electricity",82,85,83.65
+"11","Jaguar","Diesel",39,30,34.05
+"12","smart","Gasoline",39,32,35.15
+"13","BMW","Diesel",35,26.5,30.325
+"14","Mazda","Gasoline",34.5,26.5,30.1
+"15","Honda","Gasoline",34.3333333333333,26,29.75
+"16","Mitsubishi","Gasoline",33.3333333333333,26.3333333333333,29.4833333333333
+"17","MINI","Gasoline",33,24,28.05
+"18","Fiat","Gasoline",32,24,27.6
+"19","Acura","Gasoline",31.5,23,26.825
+"20","Volvo","Gasoline",30.5,22.5,26.1
+"21","Chrysler","Gasoline",30,19.6666666666667,24.3166666666667
+"22","Hyundai","Gasoline",29.5,22.5,25.65
+"23","Subaru","Gasoline",29.3333333333333,22,25.3
+"24","Chevrolet","Diesel",29,21,24.6
+"25","GMC","Diesel",29,21,24.6
+"26","Lexus","Gasoline",28.8,23.6,25.94
+"27","Volkswagen","Gasoline",28.6666666666667,21,24.45
+"28","Alfa Romeo","Gasoline",28.5,20.5,24.1
+"29","Buick","Gasoline",28,20.3333333333333,23.7833333333333
+"30","Land Rover","Diesel",28,22,24.7
+"31","BMW","Gasoline",27.5,22.3333333333333,24.6583333333333
+"32","Audi","Gasoline",27.4,19.4,23
+"33","Kia","Gasoline",27,20,23.15
+"34","Nissan","Gasoline",27,20.4,23.37
+"35","Toyota","Gasoline",27,22,24.25
+"36","Chevrolet","Gasoline",26.6,19,22.42
+"37","Infiniti","Gasoline",26.5,20.5,23.2
+"38","Lincoln","Gasoline",26.5,19.5,22.65
+"39","Jaguar","Gasoline",26.3333333333333,18,21.75
+"40","Cadillac","Gasoline",25.8333333333333,18,21.525
+"41","Ford","Gasoline",25.7142857142857,18.4285714285714,21.7071428571429
+"42","Genesis","Gasoline",24.6666666666667,16.3333333333333,20.0833333333333
+"43","Jeep","Gasoline",24.6666666666667,18,21
+"44","Porsche","Gasoline",24.6666666666667,18,21
+"45","Ram","Gasoline",24.3333333333333,17.3333333333333,20.4833333333333
+"46","Mercedes-Benz","Gasoline",24.25,17.75,20.675
+"47","Lotus","Gasoline",24,17,20.15
+"48","GMC","Gasoline",23.6666666666667,17.3333333333333,20.1833333333333
+"49","Dodge","Gasoline",23.6,15.6,19.2
+"50","Land Rover","Gasoline",23,17,19.7
+"51","McLaren Automotive","Gasoline",23,16,19.15
+"52","Roush Performance","Gasoline",23,14,18.05
+"53","Maserati","Gasoline",22,15,18.15
+"54","Bentley","Gasoline",21,12.5,16.325
+"55","Aston Martin","Gasoline",19,12,15.15
+"56","Ferrari","Gasoline",19,14,16.25
+"57","Lamborghini","Gasoline",19,12,15.15
+"58","Rolls-Royce","Gasoline",19,12,15.15
