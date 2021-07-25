@@ -18,6 +18,8 @@
                 pointer-events: none;
                 background-color: rgb(228, 151, 151);
             }
+            .bar { fill: steelblue; }
+
              </style>
 
 
@@ -44,28 +46,17 @@
 
     
     var margin = 50;
-    var width = 500;
+    var width = 1500;
     var height = 500;
 
         
-    var x = d3.scaleLinear()
-        .range([0,500]);
+    var x = d3.scaleBand()
+        .range([0,width])
+        .padding(0.1);
         
     var y = d3.scaleLinear()
-        .range([500,0]);
-    
-var cityMPGLine = d3.line()
-    .x(function(d) { return x(d.EngineCylinders); })
-    .y(function(d) { return y(d.CityMPG); });
+        .range([height,0]);
 
-    var highwayMPGLine = d3.line()
-    .x(function(d) { return x(d.EngineCylinders); })
-    .y(function(d) { return y(d.HighwayMPG); });
-
-    var combinedMPGLine = d3.line()
-    .x(function(d) { return x(d.EngineCylinders); })
-    .y(function(d) { return y(d.AvgCombinedMPG); });
-    
 
     d3.select("svg").
         attr("width",width + 4*margin)
@@ -74,7 +65,7 @@ var cityMPGLine = d3.line()
             .attr("transform","translate(" + margin + "," + margin + ")");
  
 
-d3.csv("cyl_mpg.csv", function(d) {
+d3.csv("make_mpg.csv", function(d) {
 
     // if (error) throw error;
 
@@ -83,65 +74,61 @@ d3.csv("cyl_mpg.csv", function(d) {
         d.CityMPG = parseFloat(d.CityMPG);
         d.HighwayMPG = parseFloat(d.HighwayMPG);
         d.AvgCombinedMPG = parseFloat(d.AvgCombinedMPG);
-        d.EngineCylinders = parseFloat(d.EngineCylinders);
         return d
     
     
-   }    ).then( function (data) {
+   } ).then( function (data) {
 
    
        
-   
+   console.log(data)
          // Scale the range of the data
-  x.domain(d3.extent(data, function(d) { return d.EngineCylinders; }));
+  x.domain(data.map(function(d) { return d.Makefuel; }));
   y.domain([0, 150]);
 
 
     
-    d3.select("svg").append("path")
+    d3.select("svg")
     .attr("transform","translate(" + margin + "," + margin + ")")
-        .data([data])
-        .attr("class", "line")
-        .style("stroke", "red")
-        .style("fill", "none")
-        .style("stroke-width", "2px")
-        .attr("d", cityMPGLine);
-    
-    
-        d3.select("svg").append("path")            
-        .attr("transform","translate(" + margin + "," + margin + ")")
-        .data([data])
-        .attr("class", "line")
-        .style("fill", "none")
-        .style("stroke", "green")
-        .style("stroke-width", "2px")
-        .attr("d", highwayMPGLine);
+    .selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("rect")
+        // .attr("class", "bar")
+        .attr("x", function(d) { return x(d.Makefuel); })
+        .attr("width", x.bandwidth())
+        .attr("y", function(d) { return y(d.AvgCombinedMPG); })
+        .attr("height", function(d) { return height - y(d.AvgCombinedMPG) ; })
+        .attr("fill", "red");
 
-        d3.select("svg").append("path")
-        .attr("transform","translate(" + margin + "," + margin + ")")
-        .data([data])
-        .attr("class", "line")
-        .style("fill", "none")
-        .style("stroke", "black")
-        .style("stroke-width", "2px")
-        .attr("d", combinedMPGLine);
-
-
-
+        console.log(d3.select("svg").select("g").data)
 
         d3.select("svg").append("g")
-        .attr("transform", "translate(" + margin + "," + (height+margin) + ")")
-        .call(d3.axisBottom(x)
-            .tickValues([0, 2, 4, 6, 8, 10, 12])
-            .tickFormat(d3.format("~s")));
-            
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")	
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-85)");
+
    
 
     d3.select("svg").append("g")
-        .attr("transform", "translate(" + margin + "," + margin + ")")
-        .call(d3.axisLeft(y)
-            .tickFormat(d3.format("~s")));
+        // .attr("transform", "translate(" + margin + "," + margin + ")")
+        .call(d3.axisLeft(y));
     
+
+
+
+
+
+
+
+
+
+
+
     d3.select("svg").append("text")
     .attr("class", "x label")
     .attr("text-anchor", "end")
