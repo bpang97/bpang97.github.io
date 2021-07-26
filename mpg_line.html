@@ -36,7 +36,7 @@
           </div>
           
     
-    <svg width=600 height=600>
+    <svg width=1000 height=600>
     </svg>
     <script>
     
@@ -49,10 +49,10 @@
 
         
     var x = d3.scaleLinear()
-        .range([0,500]);
+        .range([0,width]);
         
     var y = d3.scaleLinear()
-        .range([500,0]);
+        .range([height,0]);
     
 var cityMPGLine = d3.line()
     .x(function(d) { return x(d.EngineCylinders); })
@@ -75,24 +75,16 @@ var cityMPGLine = d3.line()
  
 
 d3.csv("cyl_mpg.csv", function(d) {
-
-    // if (error) throw error;
-
-    // format the data
-
         d.CityMPG = parseFloat(d.CityMPG);
         d.HighwayMPG = parseFloat(d.HighwayMPG);
         d.AvgCombinedMPG = parseFloat(d.AvgCombinedMPG);
         d.EngineCylinders = parseFloat(d.EngineCylinders);
         return d
-    
-    
    }    ).then( function (data) {
 
    
        
    
-         // Scale the range of the data
   x.domain(d3.extent(data, function(d) { return d.EngineCylinders; }));
   y.domain([0, 150]);
 
@@ -183,6 +175,7 @@ d3.csv("cyl_mpg.csv", function(d) {
     we can see an interesting trend: for 0-cylinder cars, the city mileage is better than highway mileage! This is because 0-cylinder cars are electric cars, which 
     indeed have <a href="    https://www.caranddriver.com/shopping-advice/a32603216/ev-range-explained/#:~:text=Unlike%20gas%2Dpowered%20vehicles%2C%20whose,city%20range%20ratings%20than%20highway.&text=Even%20the%20shortest%2Drange%20EV,of%2C%20say%2C%2015%20mph.">better fuel efficiency in the city than on the highway</a>.  </p>
 
+    <h4> <a href="mpg_scatter.html"> << Previous </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="mpg_bar.html"> Next >> </a></h4></div>
 
 
     </body>

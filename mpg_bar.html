@@ -25,25 +25,25 @@
 
 
         <div class="header">
-            <h1>Visualizing Mileage as a Function of Cylinders</h1>
-            <p> Using the same data on cars in 2017, this time we take the average the city and highway mileages for each cylinder count, across all cars with a specific number of cylinders.
-                The line graph below shows the relationship between the number of cylinders on the x-axis against the mpg on the y-axis. Note that 0 cylinders is actually a legitimate measurement, as electric cars 
-                are considered to have no cylinders! Also, the mileage for electric vehicles is expressed as "miles per gallon gasoline equivalent", MPGe. You can 
-                read more about how this is calculated <a href="https://en.wikipedia.org/wiki/Miles_per_gallon_gasoline_equivalent">here</a>.
-                </p>
+            <h1>Mileage of Various Makes of Cars</h1>
+            <p> Here, we have aggregated the highway, city, and combined mileage by car and fuel type (this means there is one single combined mpg
+                statistic for each manufacturer and fuel type).
+                 The bar chart below plots the average 
+                combined mileage for each (manufacturer, fuel type) pair in the dataset.
+                The y-axis shows miles per gallon (the mileage for electric vehicles is expressed as 
+                <a href="https://en.wikipedia.org/wiki/Miles_per_gallon_gasoline_equivalent">"miles per gallon gasoline equivalent"</a>, or MPGe).
+            </p>
+           
 
-            <p> Finally, the combined mileage is calculated as <a href="https://www.epa.gov/fueleconomy/text-version-gasoline-label">defined by the EPA</a>: as a weighted average of 45% highway and 55% city.
+            <p> Mouse over the bar chart to see the city, highway and combined fuel efficiencies for each of the cars!
                 </p>
                 
           </div>
           
     
-    <svg width=600 height=600>
+    <svg width=1500 height=600>
     </svg>
     <script>
-    
-
-
     
     var margin = 50;
     var width = 1500;
@@ -67,10 +67,6 @@
 
 d3.csv("make_mpg.csv", function(d) {
 
-    // if (error) throw error;
-
-    // format the data
-
         d.CityMPG = parseFloat(d.CityMPG);
         d.HighwayMPG = parseFloat(d.HighwayMPG);
         d.AvgCombinedMPG = parseFloat(d.AvgCombinedMPG);
@@ -79,15 +75,42 @@ d3.csv("make_mpg.csv", function(d) {
     
    } ).then( function (data) {
 
-   
+    var tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+    
+    
+    // tooltip mouseover event handler
+    var tipMouseover = function(d) {
+        var html  = d.Makefuel +  "<br/>" +
+                    "Avg City MPG: " + d.CityMPG + "<br/> Avg Highway MPG: " + d.HighwayMPG +  "<br/> Avg Combined MPG: " + d.AvgCombinedMPG;
+    
+        tooltip.html(html)
+            .style("left", (d3.event.pageX + 15) + "px")
+            .style("top", (d3.event.pageY - 28) + "px")
+        .transition()
+            .duration(200) // ms
+            .style("opacity", 1) // started as 0!
+    
+    };
+    // tooltip mouseout event handler
+    var tipMouseout = function(d) {
+        tooltip.transition()
+            .duration(300) // ms
+            .style("opacity", 0); // don't care about position!
+    };
+    
        
    console.log(data)
          // Scale the range of the data
   x.domain(data.map(function(d) { return d.Makefuel; }));
   y.domain([0, 150]);
 
+  var color = {}
+  color["Gasoline"] = "orange"
+  color["Electricity"] = "green"
+  color["Diesel"] = "blue"
 
-    
     d3.select("svg")
     .attr("transform","translate(" + margin + "," + margin + ")")
     .selectAll(".bar")
@@ -99,62 +122,40 @@ d3.csv("make_mpg.csv", function(d) {
         .attr("width", x.bandwidth())
         .attr("y", function(d) { return y(d.AvgCombinedMPG); })
         .attr("height", function(d) { return height - y(d.AvgCombinedMPG) ; })
-        .attr("fill", "red");
+        // .attr("fill", "red")
+        .attr("fill", function(d) { return color[d.Fuel];})
+        .on("mouseover", tipMouseover)
+        .on("mouseout", tipMouseout);
 
         console.log(d3.select("svg").select("g").data)
 
         d3.select("svg").append("g")
         .attr("transform", "translate(0," + (height) + ")")
         .call(d3.axisBottom(x))
-        .selectAll("text")	
+        .selectAll("text")
+        .attr("dx", "-1em")
+        .attr("dy", "-.3em")
         .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-85)");
+        .attr("transform", "rotate(-80)");
 
    
 
     d3.select("svg").append("g")
-        // .attr("transform", "translate(" + margin + "," + margin + ")")
-        .call(d3.axisLeft(y));
-    
+        .call(d3.axisLeft(y).ticks(20)
+            .tickFormat(d3.format("~s")));
+   
 
 
-
-
-
-
-
-
-
-
-
-    d3.select("svg").append("text")
-    .attr("class", "x label")
-    .attr("text-anchor", "end")
-    .attr("x", width - margin * 3)
-    .attr("y", height + 2 * margin - 6)
-    .text("Engine Cylinders");
-
-
-    d3.select("svg").append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .attr("y", 6)
-    .attr("x", -4 * margin)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("Miles Per Gallon");
 
 
     // legend
-    d3.select("svg").append("circle").attr("cx",400).attr("cy",130).attr("r", 6).style("fill", "green")
-    d3.select("svg").append("circle").attr("cx",400).attr("cy",160).attr("r", 6).style("fill", "black")
-    d3.select("svg").append("circle").attr("cx",400).attr("cy",190).attr("r", 6).style("fill", "red")
+    d3.select("svg").append("circle").attr("cx",30).attr("cy",30).attr("r", 6).style("fill", "orange")
+    d3.select("svg").append("circle").attr("cx",30).attr("cy",60).attr("r", 6).style("fill", "blue")
+    d3.select("svg").append("circle").attr("cx",30).attr("cy",90).attr("r", 6).style("fill", "green")
 
-    d3.select("svg").append("text").attr("x", 420).attr("y", 130).text("Highway").style("font-size", "15px").attr("alignment-baseline","middle")
-    d3.select("svg").append("text").attr("x", 420).attr("y", 160).text("Combined").style("font-size", "15px").attr("alignment-baseline","middle")
-    d3.select("svg").append("text").attr("x", 420).attr("y", 190).text("City").style("font-size", "15px").attr("alignment-baseline","middle")
+    d3.select("svg").append("text").attr("x", 50).attr("y", 30).text("Gasoline").style("font-size", "15px").attr("alignment-baseline","middle")
+    d3.select("svg").append("text").attr("x", 50).attr("y", 60).text("Diesel").style("font-size", "15px").attr("alignment-baseline","middle")
+    d3.select("svg").append("text").attr("x", 50).attr("y", 90).text("Electric").style("font-size", "15px").attr("alignment-baseline","middle")
 
    
    result =>  console.log('Fulfilled')
@@ -165,13 +166,16 @@ d3.csv("make_mpg.csv", function(d) {
     </script>
 
 
-<p> We can clearly see an inverse relationship between the number of cylinders and the mileage; the more cylinders, the lower the mpg. This is 
-    expected since cars with more cylinders are considered more powerful (having better acceleration), which comes at the cost of fuel efficiency. Furthermore, 
-    we can see an interesting trend: for 0-cylinder cars, the city mileage is better than highway mileage! This is because 0-cylinder cars are electric cars, which 
-    indeed have <a href="    https://www.caranddriver.com/shopping-advice/a32603216/ev-range-explained/#:~:text=Unlike%20gas%2Dpowered%20vehicles%2C%20whose,city%20range%20ratings%20than%20highway.&text=Even%20the%20shortest%2Drange%20EV,of%2C%20say%2C%2015%20mph.">better fuel efficiency in the city than on the highway</a>.  </p>
+<p> From the chart, we can clearly see that the gasoline-powered vehicles are significantly less fuel efficient than their electric counterparts. In fact, the US Depart of 
+    Energy estimates that electric vehicles convert <a href="https://www.fueleconomy.gov/feg/atv-ev.shtml">over 77% of their energy to power the wheels</a> , 
+    compared to only between 12-30% for conventional cars.
+    Furthermore, for the same make of car, the diesel fuel efficiency is actually better than gasoline; this is because diesel fuel packs more energy per gallon,
+    which allows a diesel engines to <a href="https://www.fueleconomy.gov/feg/di_diesels.shtml#:~:text=Diesel%20engines%20are%20more%20fuel,fuel%20than%20their%20gasoline%20counterparts.">go farther than their gasoline counterparts</a> 
+    on the same amount of fuel.
+  </p>
 
+  <h4> <a href="mpg_line.html"> << Previous </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="conclusion.html"> Next >> </a></h4></div>
 
 
     </body>
     </html>
-
