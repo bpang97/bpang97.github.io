@@ -67,67 +67,59 @@
 
 d3.csv("make_mpg.csv", function(d) {
 
-        d.CityMPG = parseFloat(d.CityMPG);
-        d.HighwayMPG = parseFloat(d.HighwayMPG);
-        d.AvgCombinedMPG = parseFloat(d.AvgCombinedMPG);
-        return d
-    
-    
-   } ).then( function (data) {
+    d.CityMPG = parseFloat(d.CityMPG);
+    d.HighwayMPG = parseFloat(d.HighwayMPG);
+    d.AvgCombinedMPG = parseFloat(d.AvgCombinedMPG);
+    return d
+   }).then(function(data) {
 
-    var tooltip = d3.select("body").append("div")
-                    .attr("class", "tooltip")
-                    .style("opacity", 0);
-    
-    
-    // tooltip mouseover event handler
-    var tipMouseover = function(d) {
-        var html  = d.Makefuel +  "<br/>" +
-                    "Avg City MPG: " + d.CityMPG + "<br/> Avg Highway MPG: " + d.HighwayMPG +  "<br/> Avg Combined MPG: " + d.AvgCombinedMPG;
-    
-        tooltip.html(html)
-            .style("left", (d3.event.pageX + 15) + "px")
-            .style("top", (d3.event.pageY - 28) + "px")
-        .transition()
-            .duration(200) // ms
-            .style("opacity", 1) // started as 0!
-    
-    };
-    // tooltip mouseout event handler
-    var tipMouseout = function(d) {
-        tooltip.transition()
-            .duration(300) // ms
-            .style("opacity", 0); // don't care about position!
-    };
-    
-       
-   console.log(data)
-         // Scale the range of the data
-  x.domain(data.map(function(d) { return d.Makefuel; }));
-  y.domain([0, 150]);
+        var tooltip = d3.select("body").append("div")
+                        .attr("class", "tooltip")
+                        .style("opacity", 0);
+        
+        
+        var tipMouseover = function(d) {
+            var html  = d.Makefuel +  "<br/>" +
+                        "Avg City MPG: " + d.CityMPG + "<br/> Avg Highway MPG: " + d.HighwayMPG +  "<br/> Avg Combined MPG: " + d.AvgCombinedMPG;
+        
+            tooltip.html(html)
+                .style("left", (d3.event.pageX + 15) + "px")
+                .style("top", (d3.event.pageY - 28) + "px")
+            .transition()
+                .duration(200) 
+                .style("opacity", 1)
+        
+        };
 
-  var color = {}
-  color["Gasoline"] = "orange"
-  color["Electricity"] = "green"
-  color["Diesel"] = "blue"
+        var tipMouseout = function(d) {
+            tooltip.transition()
+                .duration(300)
+                .style("opacity", 0);
+        };
+        
+            
+        x.domain(data.map(function(d) { return d.Makefuel; }));
+        y.domain([0, 150]);
 
-    d3.select("svg")
-    .attr("transform","translate(" + margin + "," + margin + ")")
-    .selectAll(".bar")
-        .data(data)
-        .enter()
-        .append("rect")
-        // .attr("class", "bar")
-        .attr("x", function(d) { return x(d.Makefuel); })
-        .attr("width", x.bandwidth())
-        .attr("y", function(d) { return y(d.AvgCombinedMPG); })
-        .attr("height", function(d) { return height - y(d.AvgCombinedMPG) ; })
-        // .attr("fill", "red")
-        .attr("fill", function(d) { return color[d.Fuel];})
-        .on("mouseover", tipMouseover)
-        .on("mouseout", tipMouseout);
+        var color = {}
+        color["Gasoline"] = "orange"
+        color["Electricity"] = "green"
+        color["Diesel"] = "blue"
 
-        console.log(d3.select("svg").select("g").data)
+        d3.select("svg")
+        .attr("transform","translate(" + margin + "," + margin + ")")
+        .selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", function(d) { return x(d.Makefuel); })
+            .attr("width", x.bandwidth())
+            .attr("y", function(d) { return y(d.AvgCombinedMPG); })
+            .attr("height", function(d) { return height - y(d.AvgCombinedMPG) ; })
+            .attr("fill", function(d) { return color[d.Fuel];})
+            .on("mouseover", tipMouseover)
+            .on("mouseout", tipMouseout);
+
 
         d3.select("svg").append("g")
         .attr("transform", "translate(0," + (height) + ")")
@@ -138,29 +130,22 @@ d3.csv("make_mpg.csv", function(d) {
         .style("text-anchor", "end")
         .attr("transform", "rotate(-80)");
 
-   
+        d3.select("svg").append("g")
+            .call(d3.axisLeft(y).ticks(20)
+                .tickFormat(d3.format("~s")));
+    
 
-    d3.select("svg").append("g")
-        .call(d3.axisLeft(y).ticks(20)
-            .tickFormat(d3.format("~s")));
-   
+        // legend
+        d3.select("svg").append("circle").attr("cx",30).attr("cy",30).attr("r", 6).style("fill", "orange")
+        d3.select("svg").append("circle").attr("cx",30).attr("cy",60).attr("r", 6).style("fill", "blue")
+        d3.select("svg").append("circle").attr("cx",30).attr("cy",90).attr("r", 6).style("fill", "green")
 
+        d3.select("svg").append("text").attr("x", 50).attr("y", 30).text("Gasoline").style("font-size", "15px").attr("alignment-baseline","middle")
+        d3.select("svg").append("text").attr("x", 50).attr("y", 60).text("Diesel").style("font-size", "15px").attr("alignment-baseline","middle")
+        d3.select("svg").append("text").attr("x", 50).attr("y", 90).text("Electric").style("font-size", "15px").attr("alignment-baseline","middle")
 
-
-
-    // legend
-    d3.select("svg").append("circle").attr("cx",30).attr("cy",30).attr("r", 6).style("fill", "orange")
-    d3.select("svg").append("circle").attr("cx",30).attr("cy",60).attr("r", 6).style("fill", "blue")
-    d3.select("svg").append("circle").attr("cx",30).attr("cy",90).attr("r", 6).style("fill", "green")
-
-    d3.select("svg").append("text").attr("x", 50).attr("y", 30).text("Gasoline").style("font-size", "15px").attr("alignment-baseline","middle")
-    d3.select("svg").append("text").attr("x", 50).attr("y", 60).text("Diesel").style("font-size", "15px").attr("alignment-baseline","middle")
-    d3.select("svg").append("text").attr("x", 50).attr("y", 90).text("Electric").style("font-size", "15px").attr("alignment-baseline","middle")
-
-   
-   result =>  console.log('Fulfilled')
    })
- .catch( error =>  console.log(error) );
+ .catch(error =>  console.log(error) );
     
     
     </script>
