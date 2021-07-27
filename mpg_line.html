@@ -14,14 +14,14 @@
 
 
         <div class="header">
-            <h1>Visualizing Mileage as a Function of Cylinders</h1>
-            <p> Using the same data on cars in 2017, this time we take the average the city and highway mileages for each cylinder count, across all cars with a specific number of cylinders.
+            <h1>Visualizing Fuel Economy as a Function of Cylinders</h1>
+            <p> Using the same data on cars in 2017, this time we take the average the city and highway fuel efficiencies for each cylinder count, across all cars with a specific number of cylinders.
                 The line graph below shows the relationship between the number of cylinders on the x-axis against the mpg on the y-axis. Note that 0 cylinders is actually a legitimate measurement, as electric cars 
-                are considered to have no cylinders! Also, the mileage for electric vehicles is expressed as "miles per gallon gasoline equivalent", MPGe. You can 
+                are considered to have no cylinders! Also, the fuel efficiency for electric vehicles is expressed as "miles per gallon gasoline equivalent", MPGe. You can 
                 read more about how this is calculated <a href="https://en.wikipedia.org/wiki/Miles_per_gallon_gasoline_equivalent">here</a>.
                 </p>
 
-            <p> Finally, the combined mileage is calculated as <a href="https://www.epa.gov/fueleconomy/text-version-gasoline-label">defined by the EPA</a>: as a weighted average of 45% highway and 55% city.
+            <p> Finally, the combined fuel efficiency is calculated as <a href="https://www.epa.gov/fueleconomy/text-version-gasoline-label">defined by the EPA</a>: as a weighted average of 45% highway and 55% city.
                 </p>
                 
           </div>
@@ -145,9 +145,9 @@ d3.csv("cyl_mpg.csv", function(d) {
     </script>
 
 
-<p> We can clearly see an inverse relationship between the number of cylinders and the mileage; the more cylinders, the lower the mpg. This is 
+<p> We can clearly see an inverse relationship between the number of cylinders and the fuel efficiency; the more cylinders, the lower the mpg. This is 
     expected since cars with more cylinders are considered more powerful (having better acceleration), which comes at the cost of fuel efficiency. Furthermore, 
-    we can see an interesting trend: for 0-cylinder cars, the city mileage is better than highway mileage! This is because 0-cylinder cars are electric cars, which 
+    we can see an interesting trend: for 0-cylinder cars, the city fuel efficiency is better than highway fuel efficiency! This is because 0-cylinder cars are electric cars, which 
     indeed have <a href="    https://www.caranddriver.com/shopping-advice/a32603216/ev-range-explained/#:~:text=Unlike%20gas%2Dpowered%20vehicles%2C%20whose,city%20range%20ratings%20than%20highway.&text=Even%20the%20shortest%2Drange%20EV,of%2C%20say%2C%2015%20mph.">better fuel efficiency in the city than on the highway</a>.  </p>
 
     <h4> <a href="mpg_scatter.html"> << Previous </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="mpg_bar.html"> Next >> </a></h4></div>
