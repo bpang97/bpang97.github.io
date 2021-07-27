@@ -1,1 +1,3 @@
-# bpang97.github.io
+This is my narrative visualization project for CS 416 Data Visualization, Summer 2021. The narrative visualization can be viewed at: https://bpang97.github.io/
+
+All data used for the visualizations in this project were originally derived from the cars2017.csv file, which was provided in the course (it can also be found at "https://flunky.github.io/cars2017.csv"). I derived two more csv files using R's sqldf library from the original cars2017.csv file: cyl_mpg.csv and make_mpg.csv. For those interested, you can view what I did to get those data in cars.Rmd.
